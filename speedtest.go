@@ -20,6 +20,12 @@ func (s *State) Init() {
 	s.l.Unlock()
 }
 
+func New() *State {
+	var st State
+	st.Init()
+	return &st
+}
+
 func (s *State) WriteSpeedJSON(w io.Writer, remoteHost string) error {
 	s.l.RLock()
 	r, ok := s.m[remoteHost]
