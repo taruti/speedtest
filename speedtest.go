@@ -26,6 +26,19 @@ func New() *State {
 	return &st
 }
 
+func (s *State) Get(remoteHost string) string {
+	s.l.RLock()
+	r := s.m[remoteHost]
+	s.l.RUnlock()
+	return r
+}
+
+func (s *State) Kill(remoteHost string) {
+	s.l.Lock()
+	delete(s.m, remoteHost)
+	s.l.Unlock()
+}
+
 func (s *State) WriteSpeedJSON(w io.Writer, remoteHost string) error {
 	s.l.RLock()
 	r, ok := s.m[remoteHost]
