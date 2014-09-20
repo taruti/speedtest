@@ -11,12 +11,12 @@ import (
 
 type State struct {
 	l sync.RWMutex
-	m map[string]string
+	m map[string]int64
 }
 
 func (s *State) Init() {
 	s.l.Lock()
-	s.m = map[string]string{}
+	s.m = map[string]int64{}
 	s.l.Unlock()
 }
 
@@ -26,7 +26,7 @@ func New() *State {
 	return &st
 }
 
-func (s *State) Get(remoteHost string) string {
+func (s *State) Get(remoteHost string) int64 {
 	s.l.RLock()
 	r := s.m[remoteHost]
 	s.l.RUnlock()
@@ -60,12 +60,12 @@ func (s *State) WriteSpeedJSON(w io.Writer, remoteHost string) error {
 				total += float64(n)
 			}
 		}
-		r = strconv.FormatInt(round(total/el.Current().Seconds()), 10)
+		r = round(total / el.Current().Seconds())
 		s.l.Lock()
 		s.m[remoteHost] = r
 		s.l.Unlock()
 	}
-	_, e := io.WriteString(w, r)
+	_, e := io.WriteString(w, strconv.FormatInt(r, 10))
 	return e
 }
 
