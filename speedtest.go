@@ -1,9 +1,9 @@
+// Speedtesting for use with writers.
 package speedtest
 
 import (
 	"github.com/taruti/monotime"
 	"io"
-	"net/http"
 	"strconv"
 	"sync"
 	"time"
@@ -20,7 +20,7 @@ func (s *State) Init() {
 	s.l.Unlock()
 }
 
-func (s *State) WriteSpeedJSON(w http.ResponseWriter, remoteHost string) error {
+func (s *State) WriteSpeedJSON(w io.Writer, remoteHost string) error {
 	s.l.RLock()
 	r, ok := s.m[remoteHost]
 	s.l.RUnlock()
